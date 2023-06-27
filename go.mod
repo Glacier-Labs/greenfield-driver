@@ -1,4 +1,4 @@
-module greenfield-driver
+module github.com/Glacier-Labs/greenfield-driver
 
 go 1.20
 
