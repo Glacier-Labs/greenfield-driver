@@ -4,11 +4,16 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"os"
 	"testing"
+
+	"github.com/joho/godotenv"
 )
 
 func TestGreenfieldDriver(t *testing.T) {
-	privateKey := "<YOUR-PRVIATE-KEY>"
+	godotenv.Load()
+
+	privateKey := os.Getenv("GREEN_PRIVATE_KEY")
 
 	bucket := "glc001-testnet-greenfield"
 	rpcAddr := "https://gnfd-testnet-fullnode-tendermint-us.bnbchain.org:443"
@@ -19,7 +24,10 @@ func TestGreenfieldDriver(t *testing.T) {
 
 	driver := GetGreenfieldDriver(rpcAddr, chainID, bucket, privateKey)
 
+	fmt.Println("account:", driver.Account().GetAddress().String())
+
 	ctx := context.Background()
+
 	txHash, err := driver.Put(ctx, key, data)
 	if err != nil {
 		t.Fatal(err)
