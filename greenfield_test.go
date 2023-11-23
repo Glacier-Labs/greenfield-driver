@@ -35,12 +35,15 @@ func TestGreenfieldDriver(t *testing.T) {
 
 	fmt.Println("txHash", txHash)
 
-	data0, err := driver.Get(ctx, key)
+	data0, txHash0, err := driver.Get(ctx, key)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	if !bytes.Equal(data, data0) {
 		t.Fatal("data not match")
+	}
+	if txHash != txHash0 {
+		t.Fatal("txHash not match")
 	}
 }

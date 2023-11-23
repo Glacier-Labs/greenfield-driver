@@ -68,10 +68,9 @@ func (gd *GreenfieldDriver) Put(ctx context.Context, key string, data []byte) (t
 			gd.logger.Error("CreateObject", zap.Any("key", key), zap.Any("err", err.Error()), zap.Any("txHash", txHash))
 			return
 		}
-	
-		gd.logger.Info("CreateObject", zap.Any("key", key), zap.Any("txHash", txHash), zap.Any("size", len(data)))	
-	}
 
+		gd.logger.Info("CreateObject", zap.Any("key", key), zap.Any("txHash", txHash), zap.Any("size", len(data)))
+	}
 
 	err = gd.gnfdclient.PutObject(ctx, gd.Bucket, key, int64(len(data)), bytes.NewReader(data), types.PutObjectOptions{
 		TxnHash: txHash,
@@ -107,7 +106,16 @@ func (gd *GreenfieldDriver) Put(ctx context.Context, key string, data []byte) (t
 	}
 }
 
-func (gd *GreenfieldDriver) Get(ctx context.Context, key string) (data []byte, err error) {
+func (gd *GreenfieldDriver) Get(ctx context.Context, key string) (data []byte, txHash string, err error) {
+	meta, err := gd.gnfdclient.GetObjectMeta(ctx, gd.Bucket, key)
+	if err != nil {
+		return
+	}
+
+	if meta.CreateTxHash != "" {
+		txHash = strings.ToUpper(meta.CreateTxHash[2:])
+	}
+
 	objectDataReader, _, err := gd.gnfdclient.GetObject(ctx, gd.Bucket, key, types.GetObjectOptions{})
 	if err != nil {
 		return

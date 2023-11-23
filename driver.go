@@ -8,7 +8,7 @@ import (
 
 type IDriver interface {
 	Put(ctx context.Context, key string, data []byte) (txHash string, err error)
-	Get(ctx context.Context, key string) (data []byte, err error)
+	Get(ctx context.Context, key string) (data []byte, txHash string, err error)
 	Account() *types.Account
 }
 
