@@ -2,14 +2,13 @@ package greenfield
 
 import (
 	"context"
-
-	"github.com/bnb-chain/greenfield-go-sdk/types"
 )
 
 type IDriver interface {
 	Put(ctx context.Context, key string, data []byte) (txHash string, err error)
 	Get(ctx context.Context, key string) (data []byte, txHash string, err error)
-	Account() *types.Account
+	Type() string
+	DaID(dataHash string, txHash string) string
 }
 
 func GetGreenfieldDriver(rpcAddr, chainID, bucket, privateKey string) IDriver {

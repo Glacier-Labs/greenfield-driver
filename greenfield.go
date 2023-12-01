@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"strings"
 	"time"
 
@@ -121,10 +121,18 @@ func (gd *GreenfieldDriver) Get(ctx context.Context, key string) (data []byte, t
 		return
 	}
 
-	data, err = ioutil.ReadAll(objectDataReader)
+	data, err = io.ReadAll(objectDataReader)
 	return
 }
 
 func (gd *GreenfieldDriver) Account() *types.Account {
 	return gd.account
+}
+
+func (gd *GreenfieldDriver) Type() string {
+	return "gr"
+}
+
+func (gd *GreenfieldDriver) DaID(dataHash, txHash string) string {
+	return fmt.Sprintf("%s://%s/%s?txHash=%s", gd.Type(), gd.Bucket, dataHash, txHash)
 }

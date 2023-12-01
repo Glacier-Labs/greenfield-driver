@@ -24,8 +24,6 @@ func TestGreenfieldDriver(t *testing.T) {
 
 	driver := GetGreenfieldDriver(rpcAddr, chainID, bucket, privateKey)
 
-	fmt.Println("account:", driver.Account().GetAddress().String())
-
 	ctx := context.Background()
 
 	txHash, err := driver.Put(ctx, key, data)
